@@ -1,0 +1,50 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+
+M = 0
+for i in range(1, 1001):
+    beta = 3.0 * 10**-4
+    mu = 0.1
+
+    SVec = np.array([])
+    IVec = np.array([])
+    RVec = np.array([])
+    tVec = np.array([])
+
+    S = 10**3 - 1
+    I = 1
+    R = 0
+    t = 0
+    N = S + I + R
+
+    SVec = np.append(SVec, S)
+    IVec = np.append(IVec, I)
+    RVec = np.append(RVec, R)
+    tVec = np.append(tVec, t)
+
+    while I > 0:
+        r1 = np.random.uniform(0, 1) 
+        totalRate = beta * I * S + mu * I
+        t = t - (1 / totalRate) * np.log(r1)
+
+        r2 = np.random.uniform(0, 1)
+        if r2 < beta * I * S / totalRate:
+            S = S -1
+            I = I + 1
+        else:
+            I = I - 1
+            R = R + 1
+
+        SVec = np.append(SVec, S)
+        IVec = np.append(IVec, I)
+        RVec = np.append(RVec, R)
+        tVec = np.append(tVec, t)
+
+    if IVec[-1] + RVec[-1] > 10:
+        M += 1
+
+R0 = (beta*N)/mu
+p = 1 - 1/R0
+
+print("the proportion of simulations in which the final value of I + R exceeds 10 = ",M/1000)
+print("the analogous analytic estimate for the probability of a major outbreak =",p)
